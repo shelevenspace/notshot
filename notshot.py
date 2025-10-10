@@ -1,4 +1,3 @@
-# from tkinter import *
 from PIL import ImageGrab
 import os
 import sys
@@ -15,7 +14,7 @@ def verify_writable(directory):
         return
     else:
         if not arg.quiet: subprocess.run(["/usr/bin/notify-send", "--icon=error", "Invalid directory!", "Fatal error: Couldn't access specified directory (1)\n\nYou didn't include a trailing forward slash, the specified directory doesn't exist, isn't writable, or you specified a file."])
-        sys.exit("fatal - You didn't include a trailing forward slash, the specified directory doesn't exist, isn't writable, or a file was specified. (1)") # need to expand these errors out into being able to tell you what one happened eventually
+        sys.exit("fatal - You didn't include a trailing forward slash, the specified directory doesn't exist, isn't writable, or a file was specified. (1)")
 
 parser = argparse.ArgumentParser(
     prog="notShot",
@@ -25,30 +24,36 @@ parser.add_argument('-v', '--verbose', dest='verbose', action='store_true', help
 parser.add_argument('-n', '--nostruct', dest="nostructure", action="store_true", help="don't use notshot's folder structure and just save the file at the output location")
 parser.add_argument('-s', '--seeimage', dest="seeimage", action="store_true", help="open the image in the default viewer after saving")
 parser.add_argument('-q', '--quiet', dest="quiet", action="store_true", help="do not send notifications (this will suppress error notifications too)")
+parser.add_argument('-a', '--active', dest="useactive", action="store_true", help="just capture the active window instead of waiting for you to click on something")
 parser.add_argument('--dry', dest="dry", action="store_true", help="dry run (don't save anything but go through the motions)")
 parser.add_argument('-o', '--output', default="~/Pictures/", type=pathlib.Path, dest='directory', help="the directory to output to, including trailing forward slash. default: ~/Pictures/")
 arg = parser.parse_args()
 
 # figure out where the user wanted the image saved
 if arg.verbose: print(f'verbose mode: {arg.verbose} / --output recieved: {arg.directory}')
-arg.directory = os.path.expanduser(arg.directory) # this is needed if there is no `--output` provided whatsoever.
+arg.directory = os.path.expanduser(arg.directory) # this is needed if there is no `--output` provided whatsoever, else it fails to verify.
 if arg.verbose: print(f'expanded: {arg.directory}')
-arg.directory = str(arg.directory) + "/" # pathlib strips the trailing forward slash which is necessary here for the final file output.
+arg.directory = str(arg.directory) + "/" # pathlib strips the trailing forward slash which is necessary to have for the final file output.
 if arg.verbose: print(f'trailing added: {arg.directory}')
 verify_writable(arg.directory)
 
-# ask for what to take image of and figure out where it is
-idatcursor = subprocess.check_output(["/bin/bash", "-c", "xwininfo | awk '/Window id/ {print $4}'"]).decode("utf-8").strip()
-if arg.verbose: print(f'click caught, capturing information')
-geometryupleftx = int(subprocess.check_output(["/bin/bash", "-c", "xwininfo -id " + idatcursor + " | awk '/Absolute upper-left X/ {print $4}'"]).decode("utf-8").strip())
-geometryuplefty = int(subprocess.check_output(["/bin/bash", "-c", "xwininfo -id " + idatcursor + " | awk '/Absolute upper-left Y/ {print $4}'"]).decode("utf-8").strip())
-geometrywidth = int(subprocess.check_output(["/bin/bash", "-c", "xwininfo -id " + idatcursor + " | awk '/Width/ {print $2}'"]).decode("utf-8").strip())
-geometryheight = int(subprocess.check_output(["/bin/bash", "-c", "xwininfo -id " + idatcursor + " | awk '/Height/ {print $2}'"]).decode("utf-8").strip())
-processname = subprocess.check_output(["/bin/bash", "-c", "xprop -id " + idatcursor + " | awk '/WM_CLASS/ {print $4}'"]).decode("utf-8").strip().strip('\"').lower() # i am sure there's a better way to do this but for now, it functions.
+# capture the image and figure out where the window is on screen
+if not arg.useactive: # ask for what to take image of with mouse click
+    capturedid = subprocess.check_output(["/bin/bash", "-c", "xwininfo | awk '/Window id/ {print $4}'"]).decode("utf-8").strip()
+    if arg.verbose: print(f'click caught, capturing information')
+else: # just capture the active window
+    capturedid = subprocess.check_output(["/bin/bash", "-c", "xwininfo -id `xdotool getwindowfocus` | awk '/Window id/ {print $4}'"]).decode("utf-8").strip()
+    if arg.verbose: print(f'active window caught, capturing information')
+
+geometryupleftx = int(subprocess.check_output(["/bin/bash", "-c", "xwininfo -id " + capturedid + " | awk '/Absolute upper-left X/ {print $4}'"]).decode("utf-8").strip())
+geometryuplefty = int(subprocess.check_output(["/bin/bash", "-c", "xwininfo -id " + capturedid + " | awk '/Absolute upper-left Y/ {print $4}'"]).decode("utf-8").strip())
+geometrywidth = int(subprocess.check_output(["/bin/bash", "-c", "xwininfo -id " + capturedid + " | awk '/Width/ {print $2}'"]).decode("utf-8").strip())
+geometryheight = int(subprocess.check_output(["/bin/bash", "-c", "xwininfo -id " + capturedid + " | awk '/Height/ {print $2}'"]).decode("utf-8").strip())
+processname = subprocess.check_output(["/bin/bash", "-c", "xprop -id " + capturedid + " | awk '/WM_CLASS/ {print $4}'"]).decode("utf-8").strip().strip('\"').lower()
 
 # prepare the coordinates for imagegrab
-if arg.verbose: print(f'id {idatcursor}, geom ulx {geometryupleftx}, geom uly {geometryuplefty}, geom w {geometrywidth}, geom h {geometryheight}, name {processname}\nnow processing geometry')
-postgeomleft = geometryupleftx # distance of top left corner from leftmost of screen(s)
+if arg.verbose: print(f'id {capturedid}, geom ulx {geometryupleftx}, geom uly {geometryuplefty}, geom w {geometrywidth}, geom h {geometryheight}, name {processname}\nnow processing geometry')
+postgeomleft = geometryupleftx # distance of top left corner from leftmost of screen(s) (these can be difficult to understand so it's documented here how ImageGrab handles coordinates)
 postgeomupper = geometryuplefty # distance of top left corner from topmost of screen(s)
 postgeomright = geometryupleftx + geometrywidth # distance of bottom right corner from leftmost of screen(s)
 postgeomlower = geometryuplefty + geometryheight # distance of bottom right corner from topmost of screen(s)
