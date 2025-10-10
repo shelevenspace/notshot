@@ -48,3 +48,22 @@ Example: `~/Pictures/notShot/2025-10/09-image.png`
 
 - ImageGrab module by Pillow
 <!-- - [keyboard](https://github.com/boppreh/keyboard) by BoppreH -->
+
+## How to have notShot handle screenshots via hotkey
+If you want to use notShot to take your screenshots instead of what you already have, you have to go through a couple steps, but it isn't complicated.
+
+1. Make a new file in a location you have access to. I suggest your home folder (`~`). Name it something memorable, like `Launch-notShot.sh`.
+2. Add the following, replacing the placeholders, into the file:
+```sh
+#!/bin/bash
+cd /the/path/to/notshot.py
+python3 notshot.py
+```
+3. Save the file and make it executable. You can do this by right-clicking the file, clicking Properties, Permissions, and checking `Allow executing file as a program`.
+4. Open the Cinnamon menu (click it, or press the Windows / `Super` key) and search `Keyboard`. Open it and click the `Shortcuts` tab.
+5. Search `Take a screenshot`, click the `Print` keyboard binding, and press `Backspace` to clear it. 
+6. On the bottom, click `Add custom shortcut`. Name it something memorable, like `notShot screenshot`.
+7. Click the button on the `Command:` line that says `(None)` with a folder icon. Find the file you just created, select it, and click the `Open` button in the dialog.
+8. Click `Add` to create the shortcut.
+9. In the `Keyboard Bindings` section, click any of the `unassigned` entries and press the `Print Screen`, `Prt Sc`, or `Print` key, whatever it may be called for you.
+10. You're done! Test your new shortcut. If you wish, you can assign some other key combo to invoke notShot.
