@@ -37,7 +37,7 @@ Example: `~/Pictures/notShot/2025-10/09-image.png`
 - `--quiet` - Don't show a notification on finished save.
 - `--active` - Instead of clicking on a window to capture, just capture the currently active window and save that.
 - `--dry` - Only use `/tmp` and don't actually save the image
-- `--format` - Use a specified format instead of `png`. See the format support section for choices.
+- `--format` - Use a specified format instead of `png`. See the [format support](#format-support) section for choices.
 - `--output` - If you specify an output directory, notShot will create its folder structure there instead and then save the file.
 
 ## Example usage
