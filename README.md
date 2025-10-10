@@ -6,6 +6,7 @@ notShot is a screenshot utility made for Linux Mint Cinnamon.
 
 - Python 3.12.3
 - xwininfo (`# apt install xdotool`)
+- Be using an X Window system. Wayland isn't supported.
 
 ## Using notShot
 
