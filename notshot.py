@@ -1,5 +1,5 @@
 # from tkinter import *
-from PIL import ImageGrab, Image
+from PIL import ImageGrab
 import os
 import sys
 from datetime import datetime
