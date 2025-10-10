@@ -15,7 +15,7 @@ def verify_writable(directory):
         if arg.verbose: print(f'directory check passed (exists and writable)')
         return
     else:
-        sys.exit('fatal - you didn\'t include a trailing forward slash, specified directory doesn\'t exist, isn\'t writable, or a file was specified (1)') # need to expand these errors out into being able to tell you what one happened
+        sys.exit("fatal - You didn't include a trailing forward slash, specified directory doesn't exist, isn't writable, or a file was specified. (1)") # need to expand these errors out into being able to tell you what one happened eventually
 
 parser = argparse.ArgumentParser(
     prog="notShot",
@@ -63,7 +63,7 @@ if arg.verbose: print(f"time: {timestamp}")
 fileformat = "png"
 if not arg.nostructure:
     struct = "notShot/" + datetime.now().strftime("%Y-%m") + "/" # e.g. "2025-10".
-    os.makedirs(arg.directory + struct, exist_ok=True) # create the notShot folder and the yyyy-mm folder if either don't exist
+    if not arg.dry: os.makedirs(arg.directory + struct, exist_ok=True) # create the notShot folder and the yyyy-mm folder if either don't exist
     filepath = arg.directory + struct + processname + "-" + timestamp + "." + fileformat  # while linux doesn't care about if there's an extension, programs usually do.
 else: 
     filepath = arg.directory + processname + "-" + timestamp + "." + fileformat
