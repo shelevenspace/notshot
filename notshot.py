@@ -1,5 +1,5 @@
 # from tkinter import *
-from PIL import ImageGrab
+from PIL import ImageGrab, Image
 import os
 import sys
 from datetime import datetime
@@ -7,6 +7,8 @@ from datetime import datetime
 import argparse
 import subprocess
 import pathlib
+
+version = "1.0-mvp"
 
 def verify_writable(directory):
     if os.path.exists(directory) and not os.path.isfile(directory) and os.access(directory, os.W_OK) and directory.endswith("/"):
@@ -17,8 +19,7 @@ def verify_writable(directory):
 
 parser = argparse.ArgumentParser(
     prog="notShot",
-    description="notShot screenshot utility v1.0-mvp",
-    epilog="This version targets Linux Mint 22.2 Zara (Cinnamon)."
+    description="notShot screenshot utility version " + version
 )
 parser.add_argument('-v', '--verbose', dest='verbose', action='store_true', help="see unnecessary amounts of detail")
 parser.add_argument('-n', '--nostruct', dest="nostructure", action="store_true", help="don't use notshot's folder structure and just save the file at the output location")
@@ -54,11 +55,11 @@ if arg.verbose: print(f"window distance from left of screen {postgeomleft}\nwind
 
 # take picture
 capture = ImageGrab.grab(bbox=(postgeomleft, postgeomupper, postgeomright, postgeomlower))
-print(f"image captured")
+if arg.verbose: print(f"image captured")
 
 # post-capture actions - try to do as little BEFORE capturing as possible to reduce delay between click and capture
 timestamp = datetime.now().strftime("%d_%H%M%S_%f") # e.g. "09_160232_753956"
-print(f"time: {timestamp}")
+if arg.verbose: print(f"time: {timestamp}")
 fileformat = "png"
 if not arg.nostructure:
     struct = "notShot/" + datetime.now().strftime("%Y-%m") + "/" # e.g. "2025-10".
@@ -78,6 +79,10 @@ try:
 except Exception:
     capture.show()
     sys.exit("fatal - couldn\'t save image after all? (3)\nopening temporary file, save this manually or lose the image!") # better than nothing
-if not arg.dry: print(f"saved as {filepath}")
-if arg.seeimage: capture.show()
-else: print(f"dry run complete. would have saved as {filepath}")
+if not arg.dry: print(f"Saved as {filepath}")
+else: print(f"Dry run complete. Would have saved as {filepath}")
+if arg.seeimage:
+    if arg.dry: capture.show()
+    else:
+        if arg.verbose: print(f"final: {filepath}")
+        subprocess.call(('xdg-open', filepath)) # open the saved file, not the one in /tmp, in the system default viewer
