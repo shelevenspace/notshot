@@ -24,6 +24,7 @@ Example: `~/Pictures/notShot/2025-10/09-image.png`
 | -o  | --output   | no  |         |
 | -s  | --seeimage | no  | false   |
 | -n  | --nostruct | no  | false   |
+| -q  | --quiet    | no  | false   |
 |     | --dry      | no  | false   |
 
 - `--help` - Shows all available arguments and what they do, then quits
@@ -31,6 +32,7 @@ Example: `~/Pictures/notShot/2025-10/09-image.png`
 - `--output` - If you specify an output directory, notShot will create its folder structure there instead and then save the file.
 - `--seeimage` - The captured image will open in your default image viewer.
 - `--nostruct` - Instead of creating the folder structure (`(path)/notshot/yyyy-mm/`), just saves the image directly to the specified directory.
+- `--quiet` - Don't show a notification on finished save.
 - `--dry` - Only use `/tmp` and don't actually save the image
 
 ## Example usage
@@ -39,8 +41,8 @@ Example: `~/Pictures/notShot/2025-10/09-image.png`
   - Saves image to `~/Pictures/notShot/yyyy-mm/dd-filename.png`.
 - `notshot.py -s`
   - Saves image to `~/Pictures/notShot/yyyy-mm/dd-filename.png` and opens it in your default viewer (`--seeimage`).
-- `notshot.py -vsn -o ~/Desktop/ --dry`
-  - Shows all actions the program is doing, opens the image after writing, skips making any folders, outputs to `~/Desktop/dd-filename.png`, and then doesn't do anything but `--verbose` and `--seeimage` because of `--dry` making it a test run. This means it will open the image out of `/tmp` , which is usually lost on reboot.
+- `notshot.py -vsnq -o ~/Desktop/ --dry`
+  - Shows all actions the program is doing, opens the image after writing, skips making any folders, outputs to `~/Desktop/dd-filename.png`, and then doesn't do anything but `--verbose` and `--seeimage` because of `--dry` making it a test run. This means it will open the image out of `/tmp` , which is usually lost on reboot. It will also not notify you of anything.
 
 ## Other things used in this program
 

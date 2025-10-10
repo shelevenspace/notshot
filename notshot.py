@@ -15,7 +15,8 @@ def verify_writable(directory):
         if arg.verbose: print(f'directory check passed (exists and writable)')
         return
     else:
-        sys.exit("fatal - You didn't include a trailing forward slash, specified directory doesn't exist, isn't writable, or a file was specified. (1)") # need to expand these errors out into being able to tell you what one happened eventually
+        if not arg.quiet: subprocess.run(["/usr/bin/notify-send", "--icon=error", "Invalid directory!", "Fatal error: Couldn't access specified directory (1)\n\nYou didn't include a trailing forward slash, the specified directory doesn't exist, isn't writable, or you specified a file."])
+        sys.exit("fatal - You didn't include a trailing forward slash, the specified directory doesn't exist, isn't writable, or a file was specified. (1)") # need to expand these errors out into being able to tell you what one happened eventually
 
 parser = argparse.ArgumentParser(
     prog="notShot",
@@ -24,6 +25,7 @@ parser = argparse.ArgumentParser(
 parser.add_argument('-v', '--verbose', dest='verbose', action='store_true', help="see unnecessary amounts of detail")
 parser.add_argument('-n', '--nostruct', dest="nostructure", action="store_true", help="don't use notshot's folder structure and just save the file at the output location")
 parser.add_argument('-s', '--seeimage', dest="seeimage", action="store_true", help="open the image in the default viewer after saving")
+parser.add_argument('-q', '--quiet', dest="quiet", action="store_true", help="do not send notifications (this will suppress error notifications too)")
 parser.add_argument('--dry', dest="dry", action="store_true", help="dry run (don't save anything but go through the motions)")
 parser.add_argument('-o', '--output', default="~/Pictures/", type=pathlib.Path, dest='directory', help="the directory to output to, including trailing forward slash. default: ~/Pictures/")
 arg = parser.parse_args()
@@ -75,12 +77,20 @@ if arg.seeimage: print(f"Will open image after saving (--seeimage)")
 # save to disk or explode and open in your image viewer of choice instead
 if arg.verbose: print(f"saving image")
 try:
-    if not arg.dry: capture.save(fp=filepath, format=fileformat)
+    if not arg.dry: 
+        capture.save(fp=filepath, format=fileformat)
+        if not arg.quiet: subprocess.run(["/usr/bin/notify-send", "--icon=info", "Capture complete", "Image saved to " + filepath + "."])
 except Exception:
+    if not arg.quiet: subprocess.run(["/usr/bin/notify-send", "--icon=error", "Capture failed!", "Fatal error: couldn't save image after all? (3)\n\nA temporary copy has been opened, save this manually or you will lose the image!"])
     capture.show()
     sys.exit("fatal - couldn\'t save image after all? (3)\nopening temporary file, save this manually or lose the image!") # better than nothing
+
+# post-save actions for result of save
 if not arg.dry: print(f"Saved as {filepath}")
-else: print(f"Dry run complete. Would have saved as {filepath}")
+else: 
+    if not arg.quiet: subprocess.run(["/usr/bin/notify-send", "--icon=info", "Dry run complete", "Would have saved as " + filepath + "."])
+    print(f"Dry run complete. Would have saved as {filepath}")
+
 if arg.seeimage:
     if arg.dry: capture.show()
     else:
