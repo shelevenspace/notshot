@@ -6,7 +6,7 @@ import argparse
 import subprocess
 import pathlib
 
-version = "1.1"
+version = "1.2"
 
 def verify_writable(directory):
     if os.path.exists(directory) and not os.path.isfile(directory) and os.access(directory, os.W_OK) and directory.endswith("/"):
@@ -26,6 +26,7 @@ parser.add_argument('-s', '--seeimage', dest="seeimage", action="store_true", he
 parser.add_argument('-q', '--quiet', dest="quiet", action="store_true", help="do not send notifications (this will suppress error notifications too)")
 parser.add_argument('-a', '--active', dest="useactive", action="store_true", help="just capture the active window instead of waiting for you to click on something")
 parser.add_argument('--dry', dest="dry", action="store_true", help="dry run (don't save anything but go through the motions)")
+parser.add_argument('-f', '--format', default="png", type=str, dest="format", help="the format to save the image as (see readme). default: png")
 parser.add_argument('-o', '--output', default="~/Pictures/", type=pathlib.Path, dest='directory', help="the directory to output to, including trailing forward slash. default: ~/Pictures/")
 arg = parser.parse_args()
 
@@ -66,13 +67,12 @@ if arg.verbose: print(f"image captured")
 # post-capture actions - try to do as little BEFORE capturing as possible to reduce delay between click and capture
 timestamp = datetime.now().strftime("%d_%H%M%S_%f") # e.g. "09_160232_753956"
 if arg.verbose: print(f"time: {timestamp}")
-fileformat = "png"
 if not arg.nostructure:
     struct = "notShot/" + datetime.now().strftime("%Y-%m") + "/" # e.g. "2025-10".
     if not arg.dry: os.makedirs(arg.directory + struct, exist_ok=True) # create the notShot folder and the yyyy-mm folder if either don't exist
-    filepath = arg.directory + struct + processname + "-" + timestamp + "." + fileformat  # while linux doesn't care about if there's an extension, programs usually do.
+    filepath = arg.directory + struct + processname + "-" + timestamp + "." + arg.format  # while linux doesn't care about if there's an extension, programs usually do.
 else: 
-    filepath = arg.directory + processname + "-" + timestamp + "." + fileformat
+    filepath = arg.directory + processname + "-" + timestamp + "." + arg.format
 
 if arg.dry: print(f"Dry run, not writing to disk (--dry)")
 if arg.nostructure: print(f"Skipping making any folders and saving directly (--nostruct)")
@@ -82,7 +82,7 @@ if arg.seeimage: print(f"Will open image after saving (--seeimage)")
 if arg.verbose: print(f"saving image")
 try:
     if not arg.dry: 
-        capture.save(fp=filepath, format=fileformat)
+        capture.save(fp=filepath, format=arg.format)
         if not arg.quiet: subprocess.run(["/usr/bin/notify-send", "--icon=info", "Capture complete", "Image saved to " + filepath + "."])
 except Exception:
     if not arg.quiet: subprocess.run(["/usr/bin/notify-send", "--icon=error", "Capture failed!", "Fatal error: couldn't save image after all? (3)\n\nA temporary copy has been opened, save this manually or you will lose the image!"])

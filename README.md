@@ -18,25 +18,27 @@ Example: `~/Pictures/notShot/2025-10/09-image.png`
 
 ## Arguments
 
-| Arg | Arg-long   | Req | default |
-| --- | ---------- | --- | ------- |
-| -h  | --help     | no  |         |
-| -v  | --verbose  | no  | false   |
-| -o  | --output   | no  |         |
-| -s  | --seeimage | no  | false   |
-| -n  | --nostruct | no  | false   |
-| -q  | --quiet    | no  | false   |
-| -a  | --active   | no  | false   |
-|     | --dry      | no  | false   |
+| Arg | Arg-long   | Req | Default     |
+| --- | ---------- | --- | ----------- |
+| -h  | --help     | no  |             |
+| -v  | --verbose  | no  | false       |
+| -s  | --seeimage | no  | false       |
+| -n  | --nostruct | no  | false       |
+| -q  | --quiet    | no  | false       |
+| -a  | --active   | no  | false       |
+|     | --dry      | no  | false       |
+| -f  | --format   | no  | png         |
+| -o  | --output   | no  | ~/Pictures/ |
 
 - `--help` - Shows all available arguments and what they do, then quits
 - `--verbose` - The program will display quite a lot of information about what it's up to and what it understands.
-- `--output` - If you specify an output directory, notShot will create its folder structure there instead and then save the file.
 - `--seeimage` - The captured image will open in your default image viewer.
 - `--nostruct` - Instead of creating the folder structure (`(path)/notshot/yyyy-mm/`), just save the image directly to the specified directory.
 - `--quiet` - Don't show a notification on finished save.
 - `--active` - Instead of clicking on a window to capture, just capture the currently active window and save that.
 - `--dry` - Only use `/tmp` and don't actually save the image
+- `--format` - Use a specified format instead of `png`. See the format support section for choices.
+- `--output` - If you specify an output directory, notShot will create its folder structure there instead and then save the file.
 
 ## Example usage
 
@@ -69,3 +71,21 @@ python3 notshot.py
 8. Click `Add` to create the shortcut.
 9. In the `Keyboard Bindings` section, click any of the `unassigned` entries and press the `Print Screen`, `Prt Sc`, or `Print` key, whatever it may be called for you.
 10. You're done! Test your new shortcut. If you wish, you can assign some other key combo to invoke notShot.
+
+## Format support
+This assumes the default system-included installation of the Pillow framework on Linux Mint. No promises are made if you are running on another system or modify your installation's framework, as format support relies on that.
+
+| Format   | Supported    | Format | Supported |
+| -------- | ------------ | ------ | --------- |
+| png      | yes, default | icns   | partial   |
+| dds      | yes          | apng   | no        |
+| eps      | yes          | blp    | no        |
+| gif      | yes          | dib    | no        |
+| jpeg     | yes          | im     | no        |
+| jpeg2000 | yes          | msp    | no        |
+| pdf      | yes          | palm   | no        |
+| ppm      | yes          | pcx    | no        |
+| sgi      | yes          | spi    | no        |
+| tga      | yes          | xv     | no        |
+| tiff     | yes          |        |           |
+| webp     | yes          |        |           |
