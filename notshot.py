@@ -8,7 +8,7 @@ import argparse
 import subprocess
 import pathlib
 
-version = "1.0-mvp"
+version = "1.1"
 
 def verify_writable(directory):
     if os.path.exists(directory) and not os.path.isfile(directory) and os.access(directory, os.W_OK) and directory.endswith("/"):
