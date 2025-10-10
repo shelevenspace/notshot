@@ -3,7 +3,6 @@ from PIL import ImageGrab
 import os
 import sys
 from datetime import datetime
-# import keyboard
 import argparse
 import subprocess
 import pathlib
