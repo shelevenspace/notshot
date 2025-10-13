@@ -52,7 +52,8 @@ Example: `~/Pictures/notShot/2025-10/09-image.png`
 
 ## Other things used in this program
 
-- ImageGrab module by Pillow
+- [ImageGrab](https://github.com/python-pillow/Pillow/) module from Pillow
+- [xdotool](https://github.com/jordansissel/xdotool) from jordanissel
 
 ## How to have notShot handle screenshots via hotkey
 If you want to use notShot to take your screenshots instead of what you already have, you have to go through a couple steps, but it isn't complicated.
