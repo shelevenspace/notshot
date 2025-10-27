@@ -6,15 +6,15 @@ import argparse
 import subprocess
 import pathlib
 
-version = "1.2"
+version = "1.3-beta"
 
 def verify_writable(directory):
     if os.path.exists(directory) and not os.path.isfile(directory) and os.access(directory, os.W_OK) and directory.endswith("/"):
         if arg.verbose: print(f'directory check passed (exists and writable)')
         return
     else:
-        if not arg.quiet: subprocess.run(["/usr/bin/notify-send", "--icon=error", "Invalid directory!", "Fatal error: Couldn't access specified directory (1)\n\nYou didn't include a trailing forward slash, the specified directory doesn't exist, isn't writable, or you specified a file."])
-        sys.exit("fatal - You didn't include a trailing forward slash, the specified directory doesn't exist, isn't writable, or a file was specified. (1)")
+        if not arg.quiet: subprocess.run(["/usr/bin/notify-send", "--icon=error", "Invalid directory!", "Fatal (error 1) - Couldn't access specified directory\n\nYou didn't include a trailing forward slash, the specified directory doesn't exist, isn't writable, or you specified a file."])
+        sys.exit("fatal (error 1) - You didn't include a trailing forward slash, the specified directory doesn't exist, isn't writable, or a file was specified.")
 
 parser = argparse.ArgumentParser(
     prog="notShot",
@@ -39,12 +39,15 @@ if arg.verbose: print(f'trailing added: {arg.directory}')
 verify_writable(arg.directory)
 
 # capture the image and figure out where the window is on screen
-if not arg.useactive: # ask for what to take image of with mouse click
-    capturedid = subprocess.check_output(["/bin/bash", "-c", "xwininfo | awk '/Window id/ {print $4}'"]).decode("utf-8").strip()
-    if arg.verbose: print(f'click caught, capturing information')
-else: # just capture the active window
-    capturedid = subprocess.check_output(["/bin/bash", "-c", "xwininfo -id `xdotool getwindowfocus` | awk '/Window id/ {print $4}'"]).decode("utf-8").strip()
-    if arg.verbose: print(f'active window caught, capturing information')
+try:
+    if not arg.useactive: # ask for what to take image of with mouse click
+        capturedid = subprocess.check_output(["/bin/bash", "-c", "xwininfo | awk '/Window id/ {print $4}'"]).decode("utf-8").strip()
+        if arg.verbose: print(f'click caught, capturing information')
+    else: # just capture the active window
+        capturedid = subprocess.check_output(["/bin/bash", "-c", "xwininfo -id `xdotool getwindowfocus` | awk '/Window id/ {print $4}'"]).decode("utf-8").strip()
+        if arg.verbose: print(f'active window caught, capturing information')
+except Exception:
+    sys.exit("fatal (error 2) - can't detect x window system or xwininfo isn't available")
 
 geometryupleftx = int(subprocess.check_output(["/bin/bash", "-c", "xwininfo -id " + capturedid + " | awk '/Absolute upper-left X/ {print $4}'"]).decode("utf-8").strip())
 geometryuplefty = int(subprocess.check_output(["/bin/bash", "-c", "xwininfo -id " + capturedid + " | awk '/Absolute upper-left Y/ {print $4}'"]).decode("utf-8").strip())
@@ -85,9 +88,9 @@ try:
         capture.save(fp=filepath, format=arg.format)
         if not arg.quiet: subprocess.run(["/usr/bin/notify-send", "--icon=info", "Capture complete", "Image saved to " + filepath + "."])
 except Exception:
-    if not arg.quiet: subprocess.run(["/usr/bin/notify-send", "--icon=error", "Capture failed!", "Fatal error: couldn't save image after all? (3)\n\nA temporary copy has been opened, save this manually or you will lose the image!"])
+    if not arg.quiet: subprocess.run(["/usr/bin/notify-send", "--icon=error", "Capture failed!", "Fatal (error 3): couldn't save image after all? (3)\n\nA temporary copy has been opened, save this manually or you will lose the image!"])
     capture.show()
-    sys.exit("fatal - couldn\'t save image after all? (3)\nopening temporary file, save this manually or lose the image!") # better than nothing
+    sys.exit("fatal (error 3) - couldn\'t save image after all?\nopening temporary file, save this manually or lose the image!") # better than nothing
 
 # post-save actions for result of save
 if not arg.dry: print(f"Saved as {filepath}")
