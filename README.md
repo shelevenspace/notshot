@@ -10,7 +10,7 @@ notShot is a screenshot utility made for Linux Mint Cinnamon.
 
 ## Using notShot
 
-Currently, executing the script will then wait for you to click a window. It will then capture an image of that window and save it.
+Executing the script without arguments will cause it to wait for you to click a window. It will then capture an image of that window and save it.
 
 By default, notShot will save captures to the folder `~/Pictures`, inside its own folder structure. It will organize the images within a folder for each month, then append the day onto the image filename itself.
 
@@ -91,3 +91,6 @@ This assumes the default system-included installation of the Pillow framework on
 | tga      | yes          | xv     | no        |
 | tiff     | yes          |        |           |
 | webp     | yes          |        |           |
+
+## Other notes
+notShot will probably work on most X window system based desktop environments, but it is only tested under Linux Mint Cinnamon.
