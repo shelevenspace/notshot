@@ -108,7 +108,7 @@ python3 notshot.py
 > These frameworks and tools are *not in the source nor distributed* and you must [download them yourself](#Prerequisites) to use this program. If you are using the standard Linux Mint Cinnamon distribution, ImageGrab is already installed.
 
 - [ImageGrab](https://github.com/python-pillow/Pillow/) module from Pillow
-- [xdotool](https://github.com/jordansissel/xdotool) from jordanissel
+- [xdotool](https://github.com/jordansissel/xdotool) from jordansissel
 
 ## The rest
 
