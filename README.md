@@ -10,9 +10,9 @@ notShot is a screenshot utility made for Linux Mint Cinnamon.
 
 > [!NOTE]
 > If you aren't on Linux Mint Cinnamon or something is acting up, you may need to install the specific versions of the prerequisites, listed below. <sup>*Remember to simulate with `$ apt -s` before changing your system!*</sup>
->- Python: `# apt install python3=3.12.3-0ubuntu2`
->- xdotool + xwininfo: `# apt install xdotool=1:3.20160805.1-5build1`
->- Pillow: `# apt install python3-pil=10.2.0-1ubuntu1`
+>- Python - 3.12.3
+>- xdotool + xwininfo - 3.20160805.1
+>- Pillow - 10.2.0
 
 ## Using notShot
 
