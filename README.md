@@ -113,6 +113,7 @@ python3 notshot.py
 ## The rest
 
 - notShot will probably work on most X window system based desktop environments, but it is only tested under modern Linux Mint Cinnamon.
+- If you aren't going to use the Pillow framework or xdotool much outside of this, it may be wise to block potential updates with `# apt hold python3-pil xdotool`. While updates of system-included features aren't likely, it's not outside the realm of possibility.
 
 ## License
 
