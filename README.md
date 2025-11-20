@@ -13,8 +13,10 @@ notShot is a screenshot utility made for Linux Mint Cinnamon.
 > [!CAUTION]
 > Don't run scripts from the internet that you don't understand, even if you don't use sudo! Read these scripts first and see what they're going to do before you execute them.
 
-If you're a first-time user, download the `notshot-1.x.x.tar.gz` as it includes the setup and updater scripts. Extract them into a folder such as your Downloads folder.
+> [!NOTE]
+> If you're a first-time user, download the `notshot-1.x.x.tar.gz` as it includes the setup and updater scripts. Extract them into a folder such as your Downloads folder.
 
+**If you've already installed notShot before, skip all of this and run the command `~/.notshot/notshot/update.sh` instead.**
 1. Open the folder containing `setup.sh` and `update.sh`. 
 2. Make the files executable. You can do this by right-clicking the file, clicking Properties, Permissions, and checking `Allow executing file as a program`.
 3. Open a terminal inside the folder. You can do this by right-clicking in your file browser's window and choosing `Open in Terminal`.
