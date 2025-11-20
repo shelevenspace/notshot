@@ -1,6 +1,10 @@
 ## v1.3.3
-- Depreciated verbosity (`--verbose`). It will still function for now but some features may lack verbosity and the feature may be removed altogether in a future version.
+- Added setup script.
+- Added updater script.
+- Added template shortcuts to use.
 - Fixed an impending error with notification icons making no notification appear whatsoever.
+- Depreciated verbosity (`--verbose`). It will still function for now but some features may lack verbosity and the feature may be removed altogether in a future version.
+- Adjusted wording in license. Doesn't change agreement.
 
 ## v1.3.2
 - Adjusted wording of some code, removed some extraneous spaces
