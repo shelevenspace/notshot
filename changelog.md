@@ -1,4 +1,4 @@
-## v1.4 (clicky)
+## v2.0 (clicky)
 - Depreciated verbosity (`--verbose`). It will still function for now but some features may lack verbosity and the feature may be removed altogether in a future version.
 - Fixed an impending error with notification icons making no notification appear whatsoever.
 

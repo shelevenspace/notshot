@@ -3,16 +3,28 @@
 notShot is a screenshot utility made for Linux Mint Cinnamon.
 
 ## Prerequisites
-
+- Be using an X Window system. Wayland isn't supported.
 - Python 3.12.3
 - xdotool + xwininfo (`# apt install xdotool`)
-- Be using an X Window system. Wayland isn't supported.
+- A set up Python virtual environment for the following: 
+  - Pillow framework
+  - Keyboard framework
 
-> [!NOTE]
-> If you aren't on Linux Mint Cinnamon or something is acting up, you may need to install the specific versions of the prerequisites, listed below. <sup>*Remember to simulate with `$ apt -s` before changing your system!*</sup>
->- Python - 3.12.3
->- xdotool + xwininfo - 3.20160805.1
->- Pillow - 10.2.0
+## Installing notShot
+
+> [!TIP]
+> - Use the [environment setup script](envsetup.sh) to get set up with the python virtual environment easily.
+
+In a terminal, run the following commands:
+1. `python3 -m venv ~/.notshot`
+    - This sets up a python virtual environment (v-env), allowing you to install pip packages separate from Mint's system packages, protecting you from breaking your system.
+2. `source ~/.notshot/bin/activate`
+    - This sets the current terminal window to write `pip3` commands into the venv, instead of the system's packages.
+3. `pip3 install pillow==10.2.0 keyboard==0.13.5`
+    - This installs a specific version of `Pillow` and `keyboard` into the venv.
+
+run with
+~/.notshot/bin/python ~/path/to/notshot.py
 
 ## Using notShot
 
@@ -32,6 +44,7 @@ Example: `~/Pictures/notShot/2025-10/09-image.png`
 | -n  | --nostruct      | no  | false       |
 | -q  | --quiet         | no  | false       |
 | -a  | --active        | no  | false       |
+| -p  | --picklocation  | no  | false       |
 |     | --dry           | no  | false       |
 |     | --oldnamescheme | no  | false       |
 | -f  | --format        | no  | png         |
@@ -43,6 +56,7 @@ Example: `~/Pictures/notShot/2025-10/09-image.png`
 - `--nostruct` - Instead of creating the folder structure (`(path)/notshot/yyyy-mm/`), just save the image directly to the specified directory.
 - `--quiet` - Don't show a notification on finished save.
 - `--active` - Instead of clicking on a window to capture, just capture the currently active window and save that.
+- `--picklocation` - Instead of clicking on a window to capture, click on two points and capture what's between them.
 - `--dry` - Only use `/tmp` and don't actually save the image.
   - *This will disregard `--format` and produce a png when using `--seeimage` as well.*
 - `--oldnamescheme` - Write filenames as `process + time` instead of `time + process`, like in v1.2 and earlier.
@@ -65,14 +79,10 @@ If you want to use notShot to take your screenshots instead of what you already 
 2. Add the following, replacing the placeholders, into the file:
 ```sh
 #!/bin/bash
-cd /the/path/to/notshot.py
-python3 notshot.py
+/path/to/python/venv /path/to/notshot.py # the python venv path should be "/<path>/bin/python3.12"
 ```
-
 > [!TIP]
 > You can add `-a` to the end of the third line, like `python3 notshot.py -a` if you'd like to have it quickly capture the active screen instead of waiting for you to click.
-
-
 3. Save the file and make it executable. You can do this by right-clicking the file, clicking Properties, Permissions, and checking `Allow executing file as a program`.
 4. Open the Cinnamon menu (click it, or press the Windows / `Super` key) and search `Keyboard`. Open it and click the `Shortcuts` tab.
 5. Search `Take a screenshot`, click the `Print` keyboard binding, and press `Backspace` to clear it. 
@@ -85,7 +95,7 @@ python3 notshot.py
 ## Format support
 
 > [!WARNING]
-> This assumes the default system-included installation of the Pillow framework on Linux Mint. No promises are made if you are running on another system or modify your installation's framework, as format support relies on that.
+> No promises are made if you are running on another system or modify the framework, as format support relies on the specific version used.
 
 | Format   | Supported    | Format | Supported |
 | -------- | ------------ | ------ | --------- |
@@ -105,18 +115,25 @@ python3 notshot.py
 ## Frameworks and tools used by this program
 
 > [!IMPORTANT]
-> These frameworks and tools are *not in the source nor distributed* and you must [download them yourself](#Prerequisites) to use this program. If you are using the standard Linux Mint Cinnamon distribution, ImageGrab is already installed.
+> These frameworks and tools are *not in the source nor distributed* and you must [download them](#installing-notshot) to use this program.
 
 - [ImageGrab](https://github.com/python-pillow/Pillow/) module from Pillow
 - [xdotool](https://github.com/jordansissel/xdotool) from jordansissel
+- [keyboard](https://github.com/boppreh/keyboard) from boppreh
+
+> [!NOTE]
+> If something is acting up, you may need to reinstall the specific versions of the prerequisites, listed below.
+>- Python - 3.12.3
+>- xdotool + xwininfo - 3.20160805.1
+>- Pillow - 10.2.0
+>- Keyboard - 0.13.5
 
 ## The rest
 
 - notShot will probably work on most X window system based desktop environments, but it is only tested under modern Linux Mint Cinnamon.
-- If you aren't going to use the Pillow framework or xdotool much outside of this, it may be wise to block potential updates with `# apt hold python3-pil xdotool`. While updates of system-included features aren't likely, it's not outside the realm of possibility.
+- If you aren't going to use xdotool much outside of this, it may be wise to block potential updates with `# apt hold xdotool`. While updates that break functionality aren't likely, it's not outside the realm of possibility.
 
 ## License
-
 notShot (c) 2025 by shelevenspace is licensed under CC BY-NC-SA 4.0 with Source Code Clarifications.
 
 This project is licensed under a modified version of the CC BY-NC-SA 4.0. It includes important clarifications about how **source code is included** in its definitions.

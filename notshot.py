@@ -8,22 +8,26 @@ from datetime import datetime
 import argparse
 import subprocess
 import pathlib
+import keyboard
 
-version = "1.3.2"
+version = "2.0-beta1"
 
 parser = argparse.ArgumentParser(
     prog="notShot",
     description="notShot screenshot utility version " + version
 )
+capturemethod = parser.add_mutually_exclusive_group()
 parser.add_argument('-v', '--verbose', dest='verbose', action='store_true', help="(DEPRECATED) see unnecessary amounts of detail")
 parser.add_argument('-n', '--nostruct', dest="nostructure", action="store_true", help="don't use notshot's folder structure and just save the file at the output location")
 parser.add_argument('-s', '--seeimage', dest="seeimage", action="store_true", help="open the image in the default viewer after saving")
 parser.add_argument('-q', '--quiet', dest="quiet", action="store_true", help="do not send notifications (this will suppress error notifications too)")
-parser.add_argument('-a', '--active', dest="useactive", action="store_true", help="just capture the active window instead of waiting for you to click on something")
+capturemethod.add_argument('-a', '--active', dest="useactive", action="store_true", help="just capture the active window instead of waiting for you to click on something")
+capturemethod.add_argument('-p', '--picklocation', dest="picklocation", action="store_true", help="choose two spots on the screen and capture what's between them (see help.txt for usage)")
 parser.add_argument('--dry', dest="dry", action="store_true", help="dry run (don't save anything but go through the motions)")
 parser.add_argument('--oldnamescheme', dest="oldnamescheme", action="store_true", help="use the filename formatting from v1.2 (filename, then date)")
 parser.add_argument('-f', '--format', default="png", type=str, dest="format", help="the format to save the image as (see readme). default: png")
 parser.add_argument('-o', '--output', default="~/Pictures/", type=pathlib.Path, dest='directory', help="the directory to output to, including trailing forward slash. default: ~/Pictures/")
+
 arg = parser.parse_args()
 
 # figure out where the user wanted the image saved
@@ -37,31 +41,38 @@ if os.path.exists(arg.directory) and not os.path.isfile(arg.directory) and os.ac
     if arg.verbose: print(f'directory check passed (exists and writable)')
 else:
     if not arg.quiet: subprocess.run(["/usr/bin/notify-send", "-u", "critical", "Invalid directory!", "Fatal (error 1) - Couldn't access specified directory\n\nYou didn't include a trailing forward slash, the specified directory doesn't exist, isn't writable, or you specified a file."])
-    sys.exit("fatal (error 1) - You didn't include a trailing forward slash, the specified directory doesn't exist, isn't writable, or a file was specified.")
+    sys.exit("Fatal (error 1) - You didn't include a trailing forward slash, the specified directory doesn't exist, isn't writable, or a file was specified.")
 
 # capture the image and figure out where the window is on screen
-try:
-    if not arg.useactive: # ask for what to take image of with mouse click
-        capturedid = subprocess.check_output(["/bin/bash", "-c", "xwininfo | awk '/Window id/ {print $4}'"]).decode("utf-8").strip()
-        if arg.verbose: print(f'click caught, capturing information')
-    else: # just capture the active window
-        capturedid = subprocess.check_output(["/bin/bash", "-c", "xwininfo -id `xdotool getwindowfocus` | awk '/Window id/ {print $4}'"]).decode("utf-8").strip()
-        if arg.verbose: print(f'active window caught, capturing information')
-except Exception:
-    sys.exit("fatal (error 2) - can't detect x window system or xwininfo isn't available")
-
-geometryupleftx = int(subprocess.check_output(["/bin/bash", "-c", "xwininfo -id " + capturedid + " | awk '/Absolute upper-left X/ {print $4}'"]).decode("utf-8").strip())
-geometryuplefty = int(subprocess.check_output(["/bin/bash", "-c", "xwininfo -id " + capturedid + " | awk '/Absolute upper-left Y/ {print $4}'"]).decode("utf-8").strip())
-geometrywidth = int(subprocess.check_output(["/bin/bash", "-c", "xwininfo -id " + capturedid + " | awk '/Width/ {print $2}'"]).decode("utf-8").strip())
-geometryheight = int(subprocess.check_output(["/bin/bash", "-c", "xwininfo -id " + capturedid + " | awk '/Height/ {print $2}'"]).decode("utf-8").strip())
-
-# prepare the coordinates for imagegrab
-if arg.verbose: print(f'id {capturedid}, geom ulx {geometryupleftx}, geom uly {geometryuplefty}, geom w {geometrywidth}, geom h {geometryheight}\nnow processing geometry')
-postgeomleft = geometryupleftx # distance of top left corner from leftmost of screen(s)
-postgeomupper = geometryuplefty # distance of top left corner from topmost of screen(s)
-postgeomright = geometryupleftx + geometrywidth # distance of bottom right corner from leftmost of screen(s)
-postgeomlower = geometryuplefty + geometryheight # distance of bottom right corner from topmost of screen(s)
-if arg.verbose: print(f"window distance from left of screen {postgeomleft}\nwindow distance from top of screen {postgeomupper}\nwindow bottom distance from top of screen {postgeomright}\nwindow bottom right distance from left of screen {postgeomlower}\nnow capturing image")
+if not arg.picklocation:
+    try:
+        if not arg.useactive: # ask for what to take image of, with mouse click
+            capturedid = subprocess.check_output(["/bin/bash", "-c", "xwininfo | awk '/Window id/ {print $4}'"]).decode("utf-8").strip()
+            if arg.verbose: print(f'click caught, capturing information')
+        else: # just capture the active window
+            capturedid = subprocess.check_output(["/bin/bash", "-c", "xwininfo -id `xdotool getwindowfocus` | awk '/Window id/ {print $4}'"]).decode("utf-8").strip()
+            if arg.verbose: print(f'active window caught, capturing information')
+        
+        # take window information and grind it through an excessive amount of shell calls to get info on it
+        geometryupleftx = int(subprocess.check_output(["/bin/bash", "-c", "xwininfo -id " + capturedid + " | awk '/Absolute upper-left X/ {print $4}'"]).decode("utf-8").strip())
+        geometryuplefty = int(subprocess.check_output(["/bin/bash", "-c", "xwininfo -id " + capturedid + " | awk '/Absolute upper-left Y/ {print $4}'"]).decode("utf-8").strip())
+        geometrywidth = int(subprocess.check_output(["/bin/bash", "-c", "xwininfo -id " + capturedid + " | awk '/Width/ {print $2}'"]).decode("utf-8").strip())
+        geometryheight = int(subprocess.check_output(["/bin/bash", "-c", "xwininfo -id " + capturedid + " | awk '/Height/ {print $2}'"]).decode("utf-8").strip())
+        
+        # prepare the coordinates for imagegrab
+        postgeomleft = geometryupleftx # distance of top left corner from leftmost of screen(s)
+        postgeomupper = geometryuplefty # distance of top left corner from topmost of screen(s)
+        postgeomright = geometryupleftx + geometrywidth # distance of bottom right corner from leftmost of screen(s)
+        postgeomlower = geometryuplefty + geometryheight # distance of bottom right corner from topmost of screen(s)
+    except Exception:
+        sys.exit("Fatal (error 2) - can't detect x window system or xwininfo isn't available")
+else:
+    try:
+        if not arg.quiet: subprocess.run(["/usr/bin/notify-send", "-u", "low", "Ready to capture", "Put the mouse over a point, and press space. Then, move it to another point, and press space again."])
+        keyboard.wait("space")
+        
+    except Exception:
+        sys.exit("Fatal (error 4) - can't detect x window system or keyboard framework error")
 
 # take picture
 capture = ImageGrab.grab(bbox=(postgeomleft, postgeomupper, postgeomright, postgeomlower))
