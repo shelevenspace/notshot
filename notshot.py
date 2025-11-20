@@ -9,13 +9,13 @@ import argparse
 import subprocess
 import pathlib
 
-version = "1.3.2"
+version = "1.3.3"
 
 parser = argparse.ArgumentParser(
     prog="notShot",
     description="notShot screenshot utility version " + version
 )
-parser.add_argument('-v', '--verbose', dest='verbose', action='store_true', help="see unnecessary amounts of detail")
+parser.add_argument('-v', '--verbose', dest='verbose', action='store_true', help="(DEPRECATED) see unnecessary amounts of detail")
 parser.add_argument('-n', '--nostruct', dest="nostructure", action="store_true", help="don't use notshot's folder structure and just save the file at the output location")
 parser.add_argument('-s', '--seeimage', dest="seeimage", action="store_true", help="open the image in the default viewer after saving")
 parser.add_argument('-q', '--quiet', dest="quiet", action="store_true", help="do not send notifications (this will suppress error notifications too)")
@@ -36,7 +36,7 @@ if arg.verbose: print(f'trailing added: {arg.directory}')
 if os.path.exists(arg.directory) and not os.path.isfile(arg.directory) and os.access(arg.directory, os.W_OK) and arg.directory.endswith("/"):
     if arg.verbose: print(f'directory check passed (exists and writable)')
 else:
-    if not arg.quiet: subprocess.run(["/usr/bin/notify-send", "--icon=error", "Invalid directory!", "Fatal (error 1) - Couldn't access specified directory\n\nYou didn't include a trailing forward slash, the specified directory doesn't exist, isn't writable, or you specified a file."])
+    if not arg.quiet: subprocess.run(["/usr/bin/notify-send", "-u", "critical", "Invalid directory!", "Fatal (error 1) - Couldn't access specified directory\n\nYou didn't include a trailing forward slash, the specified directory doesn't exist, isn't writable, or you specified a file."])
     sys.exit("fatal (error 1) - You didn't include a trailing forward slash, the specified directory doesn't exist, isn't writable, or a file was specified.")
 
 # capture the image and figure out where the window is on screen
@@ -93,16 +93,16 @@ if arg.verbose: print(f"saving image")
 try:
     if not arg.dry: 
         capture.save(fp=filepath, format=arg.format)
-        if not arg.quiet: subprocess.run(["/usr/bin/notify-send", "--icon=info", "Capture complete", "Image saved to " + filepath + "."])
+        if not arg.quiet: subprocess.run(["/usr/bin/notify-send", "-u", "low", "Capture complete", "Image saved to " + filepath + "."])
 except Exception:
-    if not arg.quiet: subprocess.run(["/usr/bin/notify-send", "--icon=error", "Capture failed!", "Fatal (error 3): couldn't save image after all? (3)\n\nA temporary copy has possibly been opened, save this manually or you will lose the image!"])
+    if not arg.quiet: subprocess.run(["/usr/bin/notify-send", "-u", "critical", "Capture failed!", "Fatal (error 3): couldn't save image after all? (3)\n\nA temporary copy has possibly been opened, save this manually or you will lose the image!"])
     capture.show()
     sys.exit("fatal (error 3) - couldn\'t save image after all?\ntrying to open temporary file, save this manually or lose the image!") # better than nothing
 
 # post-save actions for result of save
 if not arg.dry: print(f"Saved as {filepath}")
 else: 
-    if not arg.quiet: subprocess.run(["/usr/bin/notify-send", "--icon=info", "Dry run complete", "Would have saved as " + filepath + "."])
+    if not arg.quiet: subprocess.run(["/usr/bin/notify-send", "-u", "low", "Dry run complete", "Would have saved as " + filepath + "."])
     print(f"Dry run complete. Would have saved as {filepath}")
 
 if arg.seeimage:

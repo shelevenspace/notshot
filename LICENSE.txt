@@ -82,29 +82,29 @@ License is as follows:
 CLARIFICATION OF DEFINITIONS REGARDING SOFTWARE
 ===============================================
 
-This project (including source code, assets, documentation, and generated
-binaries) is licensed under the Creative Commons 
+This project (including source code, assets, documentation, and compiled 
+software) is licensed under the Creative Commons 
 Attribution-NonCommercial-ShareAlike 4.0 International License 
 (CC BY-NC-SA 4.0).
 
-Because the CC BY-NC-SA 4.0 license is not designed for
-software, the Licensor provides the following clarification to ensure
-the intent of the "ShareAlike" and "NonCommercial" provisions are met:
+Because the CC BY-NC-SA 4.0 license is not designed for software, the 
+Licensor provides the following clarification to ensure the intent of 
+the "ShareAlike" and "NonCommercial" provisions are met:
 
-1. THE DEFINITION OF SOURCE CODE
+1. DEFINITIONS
    For the purposes of this License, "Source Code" refers to the preferred
    form of the work for making modifications to it (including but not
-   limited to original script files, project files, and assets). 
-   "Object Code" refers to any compiled, executable, and/or binary form
-   of the work.
+   limited to original script files, project files, and assets). "Compiled 
+   Software" refers to any generated executable, binaries or otherwise 
+   generated and "completed" software.
 
 2. YOUR REQUIREMENT TO SHARE SOURCE
    To comply with Section 3(b) (ShareAlike) of the License, if you Share
-   Adapted Material (including distributing the software in Object Code
+   Adapted Material (including distributing the software in a Compiled 
    form), you must make the corresponding Source Code available to the
    recipient under this same clarified CC BY-NC-SA 4.0 license. 
-   Distributing binaries without providing a mechanism to access the 
-   Source Code is a violation of this License.
+   Distributing Compiled Software without providing a mechanism to access 
+   the Source Code is a violation of this License.
 
 3. CLARIFICATION OF THE TERM "NON-COMMERCIAL"
    You may not sell this software, its Source Code, or any Adapted
