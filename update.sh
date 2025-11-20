@@ -16,4 +16,3 @@ filename="$(find -name notshot-1*.tar.gz)"
 tar -xvz --overwrite -f $filename || (echo "Error untarring. Did the file download correctly?" && exit 1)
 rm $filename || (echo "Couldn't delete tar, manual cleanup necessary.")
 echo "Done updating notShot installation!"
-xdg-open ~/.notshot/notshot
