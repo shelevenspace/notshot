@@ -1,3 +1,8 @@
+## v1.4.0 (vision)
+- Refactored entire program.
+- Added support for GUI module! Using the GUI will override any console-entered arguments with what you set within it.
+- If notShot detects the GUI module, `--help` will tell you what version it is.
+
 ## v1.3.3
 - Added setup script.
 - Added updater script.
@@ -13,7 +18,7 @@
 - Fixes issue with escaping a forbidden character in the code.
 - Refactors function to be directly in code.
 
-## v1.3 (bookkeeper)
+## v1.3.0 (bookkeeper)
 - Flipped image name from `process + time` to `time + process`. This will not affect functionality, only how file browsers sort A-Z.
     - Added an option to use the v1.2 `process + time` if you wish.
 - Changed how the window title is processed to solve issues relating to spaces in window titles. If a window has spaces, the program will now record only the first word.
@@ -22,14 +27,14 @@
 - Created a changelog file.
 - Adds `--oldnamescheme` argument to revert image filenames back to the format used in v1.2 and earlier.
 
-## v1.2 (eager multilingual)
+## v1.2.0 (eager multilingual)
 - This update was something I should have added earlier, but here it is. Adds support for Pillow's image formats, see the readme for the chart. Also adds the option to capture the active window instead of asking you to pick a window.
 - Adds `--format` (`-f`) argument to specify a format. If you choose one that isn't supported, it will not save and will give you a PNG in /tmp instead.
 - Adds  `--active` (`-a`) argument to quickly capture the currently focused window, or the desktop if there is none.
 
-## v1.1 (noisy)
+## v1.1.0 (noisy)
 - Adds native notification pushing on capture or error. This is very useful when you capture via shortcut key as no terminal opens and you have no way of knowing if it actually worked. Now you do!
 - Adds `--quiet` (`-q`) argument to silence notifications.
 
-## v1.0-mvp
+## v1.0.0-mvp
 - First release, with the basic features I wanted out of a screenshot tool. I have plans to add more, but this is fully functional and usable as it is now. Run with your equivalent of `python3 /path/to/notshot.py`.
