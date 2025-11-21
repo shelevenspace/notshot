@@ -1,3 +1,8 @@
+## v1.4.0
+- Refactored entire program.
+- Added support for GUI module! Using the GUI will override any console-entered arguments with what you set within it.
+- If notShot detects the GUI module, `--help` will tell you what version it is.
+
 ## v1.3.3
 - Added setup script.
 - Added updater script.

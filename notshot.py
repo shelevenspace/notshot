@@ -50,9 +50,9 @@ def capture(guiargs = None):
         arg.useactive = guiargs[4]
         arg.dry = guiargs[5]
         arg.oldnamescheme = guiargs[6]
-        if guiargs[7] != arg.format: # if it's not the exact same as the default
+        if guiargs[7] != "png": # if it's not the exact same as the default
             arg.format = guiargs[7]
-        if guiargs[8] != arg.directory:
+        if guiargs[8] != "~/Pictures/":
             arg.directory = guiargs[8]
 
     # figure out where the user wanted the image saved

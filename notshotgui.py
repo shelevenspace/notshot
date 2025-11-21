@@ -8,15 +8,6 @@ import tkinter.font as tkFont
 def guiver():
     return "1.0.0"
 
-def nscheck():
-    try:
-        global notshot
-        import notshot
-        headless = False # notShot is the "head"
-    except Exception:
-        headless = True
-    return headless
-
 def argsprep(v, s, n, q, a, dry, oldname, f, o): # drop all the args into an array to relay to notShot
     passedargs[0] = v
     passedargs[1] = s
@@ -30,6 +21,15 @@ def argsprep(v, s, n, q, a, dry, oldname, f, o): # drop all the args into an arr
     notshot.capture(passedargs)
 
 def mainwindow():
+    try:
+        global notshot
+        import notshot
+        headless = False # notShot is the "head"
+        verinfo = f"notShot {notshot.ver()} + GUI {guiver()}"
+    except Exception:
+        headless = True
+        verinfo = f"notShot GUI {guiver()} (headless mode)"
+
     global passedargs
     passedargs = [False] * 9 # python is zero-inclusive
 
@@ -58,7 +58,7 @@ def mainwindow():
     optoutput = ["~/Pictures/", "~/Desktop/", "~/Documents/", "~/"]
 
     # contents of gui aligned on a grid
-    ttk.Label(mf, text=f"notShot GUI {guiver()}").grid(column=1, row=1, columnspan=2)
+    ttk.Label(mf, text=verinfo).grid(column=1, row=1, columnspan=2)
     
     ttk.Label(mf, text=f" ").grid(column=1, row=2, columnspan=2) # blank space
     
@@ -108,7 +108,7 @@ def mainwindow():
     capturebutton.grid(column=1, row=16, columnspan=2, sticky="n, e, s, w")
     # mw.bind("<Key-Return>", capturebutton) # doesn't work - TypeError: 'Button' object is not callable
 
-    if nscheck():
+    if headless:
         capturebutton.config(state=DISABLED, text="notShot is missing!")
 
     mw.mainloop()
