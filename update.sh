@@ -12,7 +12,7 @@ else
     echo "notShot wasn't detected, it will be downloaded."
     mkdir ~/.notshot/notshot && cd ~/.notshot/notshot
 fi
-wget -q -nv -O - https://api.github.com/repos/shelevenspace/notshot/releases/latest | awk -F': ' '/browser_download_url/ && /notshot-1\.[0-9]+\.[0-9]+\S+\.tar\.gz/U {gsub(/"/, "", $(NF)); system("wget -qi -L " $(NF))}' || (echo "Error downloading latest release!" && exit 1) # download the latest version of notShot 1
+wget -q -nv -O - https://api.github.com/repos/shelevenspace/notshot/releases/latest | awk -F': ' '/browser_download_url/ && /notshot-1\.[0-9]+\.[0-9]+\.tar\.gz/U {gsub(/"/, "", $(NF)); system("wget -qi -L " $(NF))}' || (echo "Error downloading latest release!" && exit 1) # download the latest version of notShot 1
 filename="$(find -name notshot-1*.tar.gz)"
 tar -xvz --overwrite -f $filename || (echo "Error untarring! Did the file download correctly?" && exit 1)
 rm $filename || (echo "Couldn't delete tar, manual cleanup necessary!" && xdg-open ~/.notshot/notshot)
@@ -23,7 +23,7 @@ case "$response" in
         ;;
     *)
         echo "Updating notShot GUI module..."
-        wget -q -nv -O - https://api.github.com/repos/shelevenspace/notshot/releases/latest | awk -F': ' '/browser_download_url/ && /notshot-guimodule-1\.[0-9]+\.[0-9]+\S+\.tar\.gz/U {gsub(/"/, "", $(NF)); system("wget -qi -L " $(NF))}' || (echo "Error downloading latest release of gui module!" && exit 1) # download the latest version of notShot gui 1
+        wget -q -nv -O - https://api.github.com/repos/shelevenspace/notshot/releases/latest | awk -F': ' '/browser_download_url/ && /notshot-guimodule-1\.[0-9]+\.[0-9]+\.tar\.gz/U {gsub(/"/, "", $(NF)); system("wget -qi -L " $(NF))}' || (echo "Error downloading latest release of gui module!" && exit 1) # download the latest version of notShot gui 1
         filename="$(find -name notshot-guimodule-1*.tar.gz)"
         tar -xvz --overwrite -f $filename || (echo "Error untarring gui module! Did the file download correctly?")
         rm $filename || (echo "Couldn't delete tar, manual cleanup necessary!" && xdg-open ~/.notshot/notshot)
