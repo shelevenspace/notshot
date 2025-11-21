@@ -24,11 +24,11 @@ def mainwindow():
     try:
         global notshot
         import notshot
-        headless = False # notShot is the "head"
+        bodyless = False # notShot is the "head"
         verinfo = f"notShot {notshot.ver()} + GUI {guiver()}"
     except Exception:
-        headless = True
-        verinfo = f"notShot GUI {guiver()} (headless mode)"
+        bodyless = True
+        verinfo = f"notShot GUI {guiver()} (can't capture!)"
 
     global passedargs
     passedargs = [False] * 9 # python is zero-inclusive
@@ -108,7 +108,7 @@ def mainwindow():
     capturebutton.grid(column=1, row=16, columnspan=2, sticky="n, e, s, w")
     # mw.bind("<Key-Return>", capturebutton) # doesn't work - TypeError: 'Button' object is not callable
 
-    if headless:
+    if bodyless:
         capturebutton.config(state=DISABLED, text="notShot is missing!")
 
     mw.mainloop()

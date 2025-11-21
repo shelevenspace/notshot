@@ -15,15 +15,15 @@ def ver():
 def guicheck():
     try:
         from notshotgui import guiver
-        bodyless = False # gui is the "body"
+        headless = False # gui is the "body"
     except Exception:
-        bodyless = True
+        headless = True
     
-    match bodyless:
+    match headless:
         case False: # gui hooked
-            return "notShot version " + ver() + " with gui version " + guiver()
+            return "notShot, version " + ver() + " with GUI module, version " + guiver()
         case True: # gui not hooked, so don't show it
-            return "notShot version " + ver()
+            return "notShot, version " + ver() + " (headless)"
 
 def capture(guiargs = None):
     parser = argparse.ArgumentParser(
