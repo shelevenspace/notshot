@@ -14,7 +14,7 @@ notShot is a screenshot utility made for Linux Mint Cinnamon.
 > Don't run scripts from the internet that you don't understand, even if you don't use sudo! Read these scripts first and see what they're going to do before you execute them.
 
 > [!NOTE]
-> If you're a first-time user, download the latest `notshot-1.x.x.tar.gz` as it includes the setup and updater scripts. Extract them into a folder such as your Downloads folder.
+> If you're a first-time user, download both `setup.sh` and `update.sh` from the [Releases](https://github.com/shelevenspace/notshot/releases/latest) page.
 
 **If you've already installed notShot before, skip all of this and execute `$ ~/.notshot/notshot/update.sh` instead.**
 1. Open the folder containing `setup.sh` and `update.sh`. 
